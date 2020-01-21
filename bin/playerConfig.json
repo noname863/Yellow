@@ -1,6 +1,5 @@
 {
-    "name": "YellowPlayer",
-    "game": "YellowHost",
-    "num_players": 5,
-    "num_turns": 2000
+    "hostName": "Yellow",
+    "numPlayers": 1,
+    "playerName": "Sergey"
 }
