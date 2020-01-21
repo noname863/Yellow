@@ -13,11 +13,7 @@ void LobbyPlayerController::start() {
     Network::onMapResponse10.addListener<LobbyPlayerController, &LobbyPlayerController::onMapLayer10>(this);
     Network::onGamesResponse.addListener<LobbyPlayerController, &LobbyPlayerController::onGames>(this);
 
-    Network::send(Action::LOGIN, {
-            {"name", PlayerConfig::playerName},
-            {"game", PlayerConfig::hostName},
-            {"num_players", PlayerConfig::numPlayers},
-            {"num_turns", 2000}});
+    Network::send(Action::LOGIN, PlayerConfig::login);
     Network::send(Action::MAP, {{"layer", 0}});
     Network::send(Action::MAP, {{"layer", 1}});
     //Network::send(Action::MAP, {{"layer", 10}});
@@ -65,7 +61,7 @@ bool LobbyPlayerController::isGameRunning(const nlohmann::json & json) {
     //std::cout << json.dump(4) << std::endl;
     if (json.contains("games")) {
         for (auto game : json["games"]) {
-            if (game["name"] == PlayerConfig::hostName && game["state"] == GameState::RUN) {
+            if (game["name"] == PlayerConfig::login["game"] && game["state"] == GameState::RUN) {
                 return true;
             }
         }

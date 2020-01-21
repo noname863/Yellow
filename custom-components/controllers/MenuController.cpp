@@ -31,8 +31,10 @@ void MenuController::onDestroy() {
 }
 
 void MenuController::onGameSelected(int idx) {
-    if (idx >= 0) {
-        PlayerConfig::hostName = games[idx]["name"];
+    if (idx < 0) {
+        PlayerConfig::login["game"] = PlayerConfig::hostName;
+    } else {
+        PlayerConfig::login["game"] = games[idx]["name"];
     }
     Game::current->setState(GameState::INIT);
 }

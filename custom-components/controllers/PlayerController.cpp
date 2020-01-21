@@ -60,7 +60,7 @@ void PlayerController::onGames(const nlohmann::json &json) {
 bool PlayerController::isGameFinished(const nlohmann::json &json) {
     if (json.contains("games")) {
         for (auto game : json["games"]) {
-            if (game["name"] == PlayerConfig::hostName && game["state"] == GameState::FINISHED) {
+            if (game["name"] == PlayerConfig::login["game"] && game["state"] == GameState::FINISHED) {
                 return true;
             }
         }
