@@ -26,12 +26,7 @@ Point::Point(int idx) : Behaviour(idx) {
 }
 
 void Point::start() {
-    this->rigidBody = this->gameObject->getComponent<RigidBody>();
-}
-
-void Point::fixedUpdate() {
-    Vector2 direction = -rigidBody->velocity;
-    this->rigidBody->addForce(direction.normalized() * (ForceMethodConfig::frictionK
-    * direction.sqrMagnitude() + ForceMethodConfig::dampK * sqrtf(direction.magnitude())));
-    //rigidBody->addForce(direction.normalized() *(frictionK * direction.sqrMagnitude()));
+    if (!rigidBody) {
+        this->rigidBody = this->gameObject->getComponent<RigidBody>();
+    }
 }

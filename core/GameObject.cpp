@@ -17,16 +17,19 @@ GameObject * GameObject::instantiate() {
     for (StartWrapper & method : startPool) {
         MethodsPool::startPool.push_back(method);
     }
+    this->startPool.clear();
     for (UpdateWrapper & method : updatePool) {
         reinterpret_cast<Component *>(method.getObject())->updatePosition = 
                 MethodsPool::updatePool.size();
         MethodsPool::updatePool.push_back(method);
     }
+    this->updatePool.clear();
     for (FixedUpdateWrapper & method : fixedUpdatePool) {
         reinterpret_cast<Component *>(method.getObject())->fixedUpdatePosition = 
                 MethodsPool::fixedUpdatePool.size();
         MethodsPool::fixedUpdatePool.push_back(method);
     }
+    this->fixedUpdatePool.clear();
     onScene = true;
     return this;
 }
@@ -53,11 +56,8 @@ void GameObject::destroy() {
 }
 
 void GameObject::sceneDestroy() {
-    for (UpdateWrapper & method : this->updatePool) {
-        MethodsPool::removeFromUpdate(reinterpret_cast<Component *>(method.getObject())->updatePosition);
-    }
-    for (OnDestroyWrapper & method : this->onDestroyPool) {
-        method();
+    while (!components.empty()) {
+        components.front()->destroyImmediate();
     }
     for (Transform * child : *transform) {
         child->gameObject->sceneDestroy();

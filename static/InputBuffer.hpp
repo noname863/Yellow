@@ -18,11 +18,15 @@ class InputBuffer
     static ThreadSafeBitset<sf::Keyboard::KeyCount> releasedKeys;
 
     static ThreadSafeBitset<sf::Mouse::ButtonCount> pressedMouseButtons;
+    static ThreadSafeBitset<sf::Mouse::ButtonCount> heldMouseButtons;
     static ThreadSafeBitset<sf::Mouse::ButtonCount> releasedMouseButtons;
     
     static std::array<std::pair<sf::Event::MouseButtonEvent, std::mutex>,
                sf::Mouse::ButtonCount> pressedMouseEvents;
-
+    
+    static std::array<std::pair<sf::Event::MouseButtonEvent, std::mutex>,
+               sf::Mouse::ButtonCount> heldMouseEvents;
+    
     static std::array<std::pair<sf::Event::MouseButtonEvent, std::mutex>,
                sf::Mouse::ButtonCount> releasedMouseEvents;
     
@@ -32,6 +36,7 @@ class InputBuffer
 
     static Vector2 mousePosition;
     static std::mutex mousePositionMutex;
+    
 public:
 
     static void addKeyPressed(sf::Event::KeyEvent keyEvent);

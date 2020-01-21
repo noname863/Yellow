@@ -27,7 +27,7 @@ public:
 template<class... Args>
 template<class TClass, void (TClass::*Method)(Args...)>
 void Event<Args...>::getMethod(void * objPtr, Args... args) {
-    return (static_cast<TClass*>(objPtr)->*Method)(std::forward<Args>(args)...);
+    (static_cast<TClass*>(objPtr)->*Method)(std::forward<Args>(args)...);
 }
 
 template<class... Args>
@@ -48,8 +48,10 @@ void Event<Args...>::removeListener(TClass *objPtr) {
 
 template<class... Args>
 void Event<Args...>::invoke(Args... args) {
-    for (auto & listener : listeners) {
-        listener.second(listener.first, std::forward<Args>(args)...);
+    typename std::list <std::pair<void *, void (*)(void *, Args...)>>::iterator it, next;
+    for (it = listeners.begin(); it != listeners.end(); it = next) {
+        next = std::next(it);
+        it->second(it->first, std::forward<Args>(args)...);
     }
 }
 

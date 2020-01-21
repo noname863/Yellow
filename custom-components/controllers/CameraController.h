@@ -7,7 +7,7 @@
 
 
 #include <SFML/Window/Keyboard.hpp>
-#include "../core/Component.h"
+#include "../../core/Component.h"
 
 class CameraController : public Component {
 public:

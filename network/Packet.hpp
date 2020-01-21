@@ -62,6 +62,7 @@ enum Result
 
 enum GameState
 {
+    MENU = 0,
     INIT = 1,
     RUN = 2,
     FINISHED = 3

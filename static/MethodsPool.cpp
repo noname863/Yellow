@@ -14,6 +14,12 @@ void MethodsPool::removeFromUpdate(size_t index) {
     MethodsPool::updatePool.pop_back();
 }
 
+void MethodsPool::removeFromFixedUpdate(size_t index) {
+    std::swap(fixedUpdatePool[index], fixedUpdatePool.back());
+    reinterpret_cast<Component *>(fixedUpdatePool[index].getObject())->fixedUpdatePosition = index;
+    MethodsPool::fixedUpdatePool.pop_back();
+}
+
 void MethodsPool::start() {
     for (StartWrapper & start : MethodsPool::startPool) {
         start();
@@ -37,12 +43,13 @@ void MethodsPool::fixedUpdate() {
     }
 }
 
-void MethodsPool::onDestroy()
-{
+void MethodsPool::onDestroy() {
     for (Component * component : destroyComponentPool) {
         component->destroyImmediate();
     }
+    destroyComponentPool.clear();
     for (GameObject * gameObject : destroyObjectPool) {
         gameObject->destroyImmediate();
     }
+    destroyObjectPool.clear();
 }

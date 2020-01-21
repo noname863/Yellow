@@ -26,6 +26,12 @@ public:
 
     static std::vector<Market*> markets;
     static std::vector<Storage*> storages;
+
+    static Point * playerPoint;
+    static Town * playerTown;
+    static std::vector<Train*> playerTrains;
+
+    static void reset();
 };
 
 

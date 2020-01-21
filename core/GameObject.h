@@ -11,6 +11,7 @@
 #include <utility>
 #include <cstdint>
 #include <forward_list>
+#include <string>
 #include "../utility/methodWrapper.hpp"
 #include "../static/MethodsPool.hpp"
 #include "../utility/InterfaceChecker.hpp"
@@ -21,7 +22,7 @@ private:
     std::forward_list<StartWrapper> startPool;
     std::forward_list<UpdateWrapper> updatePool;
     std::forward_list<FixedUpdateWrapper> fixedUpdatePool;
-    std::forward_list<OnDestroyWrapper> onDestroyPool;
+    std::list<OnDestroyWrapper> onDestroyPool;
     bool onScene = false;
     
     template <class T, class... Args>
@@ -88,6 +89,7 @@ private:
     friend class MethodsPool;
     friend class Component;
 public:
+    std::string name;
     Transform * transform = nullptr; //TODO: prevent changes of this field
     GameObject();
     ~GameObject();
@@ -175,28 +177,20 @@ GameObject::addFixedUpdate(T * component) {
 template <class T>
 typename std::enable_if<HasOnDestroy<T>::value>::type
 GameObject::addOnDestroy(T * component) {
-    if (!onDestroyPool.empty()) {
-        Component * previousFront = 
-                reinterpret_cast<Component *>(
-                    onDestroyPool.front().getObject());
-        onDestroyPool.push_front(OnDestroyWrapper(component));
-        previousFront->preDestroyPosition = onDestroyPool.begin();
-    } else {
-        onDestroyPool.push_front(OnDestroyWrapper(component));        
-    }
-    component->preDestroyPosition = onDestroyPool.before_begin();
+    onDestroyPool.push_front(OnDestroyWrapper(component));
+    component->destroyPosition = onDestroyPool.begin();
 }
 
 template <class T>
 typename std::enable_if<!HasOnDestroy<T>::value>::type
 GameObject::addOnDestroy(T * component) {
-    component->preDestroyPosition = onDestroyPool.end();
+    component->destroyPosition = onDestroyPool.end();
 }
 
 template <class T>
 typename std::enable_if<HasStart<T>::value>::type
 GameObject::onSceneStart(T * component) {
-    MethodsPool::startPool.push_front(StartWrapper(component));
+    MethodsPool::startPool.push_back(StartWrapper(component));
 }
 
 template <class T>
@@ -222,7 +216,7 @@ GameObject::onSceneFixedUpdate(T * component) {
 template <class T>
 typename std::enable_if<!HasFixedUpdate<T>::value>::type
 GameObject::onSceneFixedUpdate(T * component) {
-    addUpdate(component);
+    addFixedUpdate(component);
 }
 
 #endif //WG_GAMEOBJECT_H

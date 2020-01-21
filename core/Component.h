@@ -13,7 +13,7 @@
 
 class Component {
     std::list<Component *>::iterator componentPosition;
-    std::forward_list<OnDestroyWrapper>::iterator preDestroyPosition;
+    std::list<OnDestroyWrapper>::iterator destroyPosition;
     
     size_t updatePosition;
     size_t fixedUpdatePosition;

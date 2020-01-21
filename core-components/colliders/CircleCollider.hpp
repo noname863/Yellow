@@ -16,7 +16,6 @@ public:
 
     void setRadius(float radius);
 
-public:
     bool isOverlapsPoint(const Vector2 & point) const override;
 };
 

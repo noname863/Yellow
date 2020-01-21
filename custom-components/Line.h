@@ -12,15 +12,15 @@
 
 class Line : public Behaviour {
 private:
-    LineRenderer *lineRenderer = nullptr;
+    LineRenderer * lineRenderer = nullptr;
 public:
     int length = -1;
-    Point* points[2] = {nullptr, nullptr};
+    Point * points[2] = {nullptr, nullptr};
 
     explicit Line(int idx);
 
     void start();
-    void fixedUpdate();
+    void update();
     void applyLayer0(const nlohmann::json &json) override;
 };
 

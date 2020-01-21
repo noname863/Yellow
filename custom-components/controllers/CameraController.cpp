@@ -3,15 +3,16 @@
 //
 
 #include "CameraController.h"
-#include "../static/Time.h"
-#include "../static/Input.hpp"
-#include "../core-components/Camera.h"
-#include "../utility/Mathf.hpp"
+#include "../../static/Time.h"
+#include "../../static/Input.hpp"
+#include "../../core-components/Camera.h"
+#include "../../utility/Mathf.hpp"
 #include <iostream>
 #include <cmath>
 
 void CameraController::start() {
-    this->targetWidth = Camera::mainCamera->getWidth();
+    this->targetWidth = this->maxSize;
+    Camera::mainCamera->setWidth(this->maxSize);
 }
 
 void CameraController::update() {

@@ -7,14 +7,16 @@
 
 
 #include <SFML/Graphics.hpp>
-#include <list>
+#include <vector>
 #include "../../core/Component.h"
 
 class Renderer : public Component {
 private:
-    static std::list<Renderer*> renderers;
-    std::list<Renderer*>::iterator iterator;
+    static std::vector<Renderer*> renderers;
+    size_t positionInRenderers;
+    static bool needSort;
 public:
+    float priotity = 0;
     static void draw(sf::RenderTarget &target, sf::RenderStates states);
 
     void start();

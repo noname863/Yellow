@@ -30,22 +30,13 @@ void Line::start() {
     this->lineRenderer->setVertices({0, 0}, {this->length, 0.f});
 }
 
-void Line::fixedUpdate() {
+void Line::update() {
     Vector2 direction =
             this->points[1]->transform->getPosition() -
             this->points[0]->transform->getPosition();
-    float worldLength = direction.magnitude();
     this->transform->setRotation(Mathf::RAD2DEG * atan2f(direction.y, direction.x));
-    this->transform->setLocalScale(Vector2(worldLength/this->length));
-
-    float deltaLength = worldLength - ForceMethodConfig::springLength;
-    direction.normalize();
-    this->points[0]->rigidBody->addForce(
-            ForceMethodConfig::stiffnessK * deltaLength * direction);
-    this->points[1]->rigidBody->addForce(
-            -ForceMethodConfig::stiffnessK * deltaLength * direction);
+    this->transform->setLocalScale(Vector2(direction.magnitude()/this->length));
 }
-
 
 
 

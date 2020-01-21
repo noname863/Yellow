@@ -19,11 +19,15 @@ class Input
     static std::bitset<sf::Keyboard::KeyCount> releasedKeys;
 
     static std::bitset<sf::Mouse::ButtonCount> pressedMouseButtons;
+    static std::bitset<sf::Mouse::ButtonCount> heldMouseButtons;
     static std::bitset<sf::Mouse::ButtonCount> releasedMouseButtons;
     
     static std::array<sf::Event::MouseButtonEvent,
                sf::Mouse::ButtonCount> pressedMouseEvents;
-
+    
+    static std::array<sf::Event::MouseButtonEvent,
+               sf::Mouse::ButtonCount> heldMouseEvents;
+    
     static std::array<sf::Event::MouseButtonEvent, 
                sf::Mouse::ButtonCount> releasedMouseEvents;
     
@@ -39,8 +43,11 @@ public:
     static bool isKeyUp(sf::Keyboard::Key key);
 
     static bool getMouseButtonPressed(sf::Mouse::Button button);
+    static bool getMouseButtonHeld(sf::Mouse::Button button);
     static bool getMouseButtonReleased(sf::Mouse::Button button);
+    
     static sf::Event::MouseButtonEvent getMBPressedEvent(sf::Mouse::Button button);
+    static sf::Event::MouseButtonEvent getMBHeldEvent(sf::Mouse::Button button);
     static sf::Event::MouseButtonEvent getMBReleasedEvent(sf::Mouse::Button button);
     
     static void setFromInputBuffer();

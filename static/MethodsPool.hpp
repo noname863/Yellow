@@ -18,6 +18,7 @@ class MethodsPool
     static std::list<GameObject *> destroyObjectPool;
     static std::list<Component *> destroyComponentPool;
     static void removeFromUpdate(size_t index);
+    static void removeFromFixedUpdate(size_t index);
 public:
     static void start();
     static void update();

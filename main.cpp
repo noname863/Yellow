@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include <fstream>
 #include <thread>
 #include <mutex>
 #include <atomic>
@@ -34,11 +34,11 @@ struct MainLoopIteration {
             MethodsPool::fixedUpdate();
             time -= Time::fixedDeltaTime;
         }
+        Network::update();
         MethodsPool::onDestroy();
         window.clear();
         Renderer::draw(window, mainCamera->getRenderState());
         window.display();
-        Network::update();
     }
 };
 
@@ -58,14 +58,16 @@ void mainLoop(MainLoopIteration & mainLoopIteration,
 }
 
 int main() {
+    InterfaceConfig::textFont = new sf::Font;
+    InterfaceConfig::textFont->loadFromFile(InterfaceConfig::fontFileName);
     
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Graph");
     window.setActive(true);
     
-    GameObject * root = Prefabs::graphRoot()->gameObject->instantiate();
+    GameObject * root = Prefabs::root()->instantiate();
     Camera * mainCamera = Prefabs::camera(&window);
     mainCamera->gameObject->instantiate();
-    
+
     sf::Clock clock; // starts the clock
     float time = 0.f;
     MainLoopIteration mainLoopIteration{window, mainCamera, clock, time};
@@ -78,7 +80,7 @@ int main() {
 #endif
     
     sf::Event event{};
-
+    
     while (window.isOpen()) {
 
         if (window.pollEvent(event)) {
@@ -90,6 +92,7 @@ int main() {
 #endif
                 root->destroyImmediate();
                 mainCamera->gameObject->destroyImmediate();
+                delete InterfaceConfig::textFont;
                 window.close();
                 return 0;
             case sf::Event::Resized:

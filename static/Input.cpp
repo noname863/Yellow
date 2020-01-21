@@ -9,9 +9,15 @@ std::bitset<sf::Keyboard::KeyCount> Input::releasedKeys;
 
 //for mouse buttons
 std::bitset<sf::Mouse::ButtonCount> Input::pressedMouseButtons;
+std::bitset<sf::Mouse::ButtonCount> Input::heldMouseButtons;
 std::bitset<sf::Mouse::ButtonCount> Input::releasedMouseButtons;
+
 std::array<sf::Event::MouseButtonEvent, 
         sf::Mouse::ButtonCount> Input::pressedMouseEvents;
+
+std::array<sf::Event::MouseButtonEvent, 
+        sf::Mouse::ButtonCount> Input::heldMouseEvents;
+
 std::array<sf::Event::MouseButtonEvent, 
         sf::Mouse::ButtonCount> Input::releasedMouseEvents;
 
@@ -37,12 +43,20 @@ bool Input::getMouseButtonPressed(sf::Mouse::Button button) {
     return pressedMouseButtons[button];
 }
 
+bool Input::getMouseButtonHeld(sf::Mouse::Button button) {
+    return heldMouseButtons[button];
+}
+
 bool Input::getMouseButtonReleased(sf::Mouse::Button button) {
     return releasedMouseButtons[button];
 }
 
 sf::Event::MouseButtonEvent Input::getMBPressedEvent(sf::Mouse::Button button) {
     return pressedMouseEvents[button];
+}
+
+sf::Event::MouseButtonEvent Input::getMBHeldEvent(sf::Mouse::Button button) {
+    return heldMouseEvents[button];
 }
 
 sf::Event::MouseButtonEvent Input::getMBReleasedEvent(sf::Mouse::Button button) {
@@ -82,20 +96,26 @@ void Input::setFromInputBuffer() {
         size_t end = i + 32;
         
         InputBuffer::pressedMouseButtons.getMutex(inBitsetIndex).lock();
+        InputBuffer::heldMouseButtons.getMutex(inBitsetIndex).lock();
         InputBuffer::releasedMouseButtons.getMutex(inBitsetIndex).lock();
         
         for (; (i < sf::Mouse::ButtonCount) && (i < end); ++i) {
             
-            Input::pressedMouseButtons.set(i, InputBuffer::pressedKeys.unsafeGet(i));
-            Input::releasedMouseButtons.set(i, InputBuffer::releasedKeys.unsafeGet(i));
+            Input::pressedMouseButtons.set(i, InputBuffer::pressedMouseButtons.unsafeGet(i));
+            Input::releasedMouseButtons.set(i, InputBuffer::releasedMouseButtons.unsafeGet(i));
+            Input::heldMouseButtons.set(i, InputBuffer::heldMouseButtons.unsafeGet(i));
+            
             
             InputBuffer::pressedMouseEvents[i].second.lock();
+            InputBuffer::heldMouseEvents[i].second.lock();
             InputBuffer::releasedMouseEvents[i].second.lock();
             
             Input::pressedMouseEvents[i] = InputBuffer::pressedMouseEvents[i].first;
             Input::releasedMouseEvents[i] = InputBuffer::releasedMouseEvents[i].first;            
+            Input::heldMouseEvents[i] = InputBuffer::heldMouseEvents[i].first;            
             
             InputBuffer::pressedMouseEvents[i].second.unlock();
+            InputBuffer::heldMouseEvents[i].second.unlock();
             InputBuffer::releasedMouseEvents[i].second.unlock();
 
         }
@@ -104,6 +124,7 @@ void Input::setFromInputBuffer() {
         InputBuffer::releasedMouseButtons.unsafeSetNumber(inBitsetIndex, 0);
         
         InputBuffer::pressedMouseButtons.getMutex(inBitsetIndex).unlock();
+        InputBuffer::heldMouseButtons.getMutex(inBitsetIndex).unlock();        
         InputBuffer::releasedMouseButtons.getMutex(inBitsetIndex).unlock();
         
     }

@@ -14,3 +14,20 @@ std::unordered_map<int, Train*> Database::trains;
 std::vector<Market*> Database::markets;
 std::vector<Storage*> Database::storages;
 
+Point * Database::playerPoint = nullptr;
+Town * Database::playerTown = nullptr;
+std::vector<Train*> Database::playerTrains;
+
+void Database::reset() {
+    isMapUpdated = false;
+    tick = 0;
+    points.clear();
+    lines.clear();
+    posts.clear();
+    trains.clear();
+    markets.clear();
+    storages.clear();
+    playerTown = nullptr;
+    playerPoint = nullptr;
+    playerTrains.clear();
+}
